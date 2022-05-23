@@ -200,66 +200,39 @@ form.addEventListener('submit', function (e) {
         isZipValid;
 
     if (isFormValid) {
-
-        var isDataValid;
+        var iv = CryptoJS.enc.Base64.parse("");
+        var key = CryptoJS.SHA256(passwordEl.value.trim());
+        var encryptedString = encryptData(passwordEl.value.trim(), iv, key);
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: "../../backend/logic/signupValidation.php",
             data: {
+                fname: fnameEl.value.trim(),
+                lname: lnameEl.value.trim(),
                 uname: unameEl.value.trim(),
-                email: emailEl.value.trim()
+                password: encryptedString,
+                email: emailEl.value.trim(),
+                street: streetEl.value.trim(),
+                streetnr: streetnrEl.value.trim(),
+                city: cityEl.value.trim(),
+                zip: zipEl.value.trim()
             },
-            async: false, 
-            success: function(response) {
-                var unameValid = emailValid = false; 
-                var json = $.parseJSON(response);
-                 
-
-                if (json.uname == false) {
-                    showError(unameErr, 'Username already exists.'); 
-                } else {
-                    unameValid = true;
+            async: false,
+            success: function (response) {
+                console.log(response); 
+                var x = JSON.parse(response);
+                alert(x.status_code + " " + x.message);
+                if(x.status_code == 200) {
+                    window.location.href = "http://localhost/WebEnProjekt/frontend/sites/login.php"; 
                 }
-                
-                if (json.email == false) {
-                    showError(emailErr, 'This Email is already linked to an account.')
-                } else {
-                    emailValid = true; 
-                }
-
-                if(emailValid && unameValid) {
-                    isDataValid = true; 
-                } 
             },
-            error: function() {
-                alert("Something went wrong.");
+            error: function (response) {
+                var x = JSON.parse(response);
+                alert(x.status_code + " " + x.message);
             }
-        }); 
+        });
 
-        if (isDataValid) {
-            var iv = CryptoJS.enc.Base64.parse("");
-            var key = CryptoJS.SHA256(passwordEl.value.trim());
-            var encryptedString = encryptData(passwordEl.value.trim(), iv, key);
-
-            $.ajax({
-                type: "POST",
-                url: "../../backend/logic/signupValidation.php",
-                data: {
-                    fname: fnameEl.value.trim(),
-                    lname: lnameEl.value.trim(),
-                    uname: unameEl.value.trim(),
-                    password: encryptedString,
-                    email: emailEl.value.trim(),
-                    street: streetEl.value.trim(),
-                    streetnr: streetnrEl.value.trim(),
-                    city: cityEl.value.trim(),
-                    zip: zipEl.value.trim()
-                }, 
-                async: false,
-                success: window.location.href = "http://localhost/WebEnProjekt/frontend/sites/login.html"
-            });
-        }
     }
 });
 
@@ -307,8 +280,8 @@ form.addEventListener('input', debounce(function (e) {
     }
 }));
 
-form.addEventListener('reset', function() {
-    showSuccess(fnameErr); 
+form.addEventListener('reset', function () {
+    showSuccess(fnameErr);
     showSuccess(lnameErr);
     showSuccess(unameErr);
     showSuccess(passwordErr);
