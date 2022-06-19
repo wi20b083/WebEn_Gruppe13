@@ -1,112 +1,75 @@
 <?php
-//require_once("dbcontroller.php");
-//$db_handle = new DBController();
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 ?>
-<HTML>
-<HEAD>
-<TITLE> Shopping Cart </TITLE>
-<link href="style.css" type="text/css" rel="stylesheet" />
-<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script>
-function showEditBox(editobj,id) {
-	$('#frmAdd').hide();
-	$(editobj).prop('disabled','true');
-	var currentMessage = $("#message_" + id + " .message-content").html();
-	var editMarkUp = '<textarea rows="5" cols="80" id="txtmessage_'+id+'">'+currentMessage+'</textarea><button name="ok" onClick="callCrudAction(\'edit\','+id+')">Save</button><button name="cancel" onClick="cancelEdit(\''+currentMessage+'\','+id+')">Cancel</button>';
-	$("#message_" + id + " .message-content").html(editMarkUp);
-}
-function cancelEdit(message,id) {
-	$("#message_" + id + " .message-content").html(message);
-	$('#frmAdd').show();
-}
-function cartAction(action,product_code) {
-	var queryString = "";
-	if(action != "") {
-		switch(action) {
-			case "add":
-				queryString = 'action='+action+'&code='+ product_code+'&quantity='+$("#qty_"+product_code).val();
-			break;
-			case "remove":
-				queryString = 'action='+action+'&code='+ product_code;
-			break;
-			case "empty":
-				queryString = 'action='+action;
-			break;
-		}	 
-	}
-	jQuery.ajax({
-	url: "ajax_action.php",
-	data:queryString,
-	type: "POST",
-	success:function(data){
-		$("#cart-item").html(data);
-		if(action != "") {
-			switch(action) {
-				case "add":
-					$("#add_"+product_code).hide();
-					$("#added_"+product_code).show();
-				break;
-				case "remove":
-					$("#add_"+product_code).show();
-					$("#added_"+product_code).hide();
-				break;
-				case "empty":
-					$(".btnAddAction").show();
-					$(".btnAdded").hide();
-				break;
-			}	 
-		}
-	},
-	error:function (){}
-	});
-}
-</script>
-</HEAD>
-<BODY>
-<div id="product-grid">
-	<div class="txt-heading">Products</div>
-	<?php
-	$product_array = $db->query("SELECT * FROM tblproduct ORDER BY id ASC");
-	while($row = $product_array->fetch_array()) { $the_rows[] = $row; }
-	if (!empty($the_rows)) { 
-		foreach($the_rows as $key=>$value){
-	?>
-		<div class="product-item">
-			<form id="frmCart">
-			<div class="product-image"><img src="<?php echo $product_array[$key]["image"]; ?>"></div>
-			<div><strong><?php echo $product_array[$key]["name"]; ?></strong></div>
-			<div class="product-price"><?php echo "$".$product_array[$key]["price"]; ?></div>
-			<div><input type="text" id="qty_<?php echo $product_array[$key]["code"]; ?>" name="quantity" value="1" size="2" />
-			<?php
-				$in_session = "0";
-				if(!empty($_SESSION["cart_item"])) {
-					$session_code_array = array_keys($_SESSION["cart_item"]);
-				    if(in_array($product_array[$key]["code"],$session_code_array)) {
-						$in_session = "1";
-				    }
-				}
-			?>
-			<input type="button" id="add_<?php echo $product_array[$key]["code"]; ?>" value="Add to cart" class="btnAddAction cart-action" onClick = "cartAction('add','<?php echo $product_array[$key]["code"]; ?>')" <?php if($in_session != "0") { ?>style="display:none" <?php } ?> />
-			<input type="button" id="added_<?php echo $product_array[$key]["code"]; ?>" value="Added" class="btnAdded" <?php if($in_session != "1") { ?>style="display:none" <?php } ?> />
-			</div>
-			</form>
-		</div>
-	<?php
-			}
-	}
-	?>
-</div>
-<div class="clear-float"></div>
-<div id="shopping-cart">
-<div class="txt-heading">Shopping Cart <a id="btnEmpty" class="cart-action" onClick="cartAction('empty','');">Empty Cart</a></div>
-<div id="cart-item"></div>
-</div>
-<script>
-$(document).ready(function () {
-	cartAction('','');
-})
-</script>
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Akib Khan">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Shopping Cart System</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css' />
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
+</head>
 
-</BODY>
-</HTML>
+<body>
+  <?php include "./nav/navbar.php";  ?>
+
+  <!-- Displaying Products Start -->
+  <div class="container">
+    <div id="message"></div>
+    <div class="row mt-2 pb-3">
+      <?php
+  			include '../backend/config/dbconnect.php';
+  			$stmt = $db_obj->prepare('SELECT * FROM product');
+  			$stmt->execute();
+  			$result = $stmt->get_result();
+  			while ($row = $result->fetch_assoc()):
+  		?>
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-2">
+        <div class="card-deck">
+          <div class="card p-2 border-secondary mb-2">
+            <img src="../backend/<?= $row['product_image'] ?>" class="card-img-top" height="250">
+            <div class="card-body p-1">
+              <h4 class="card-title text-center text-info"><?= $row['product_name'] ?></h4>
+              <h5 class="card-text text-center text-danger">&nbsp;&nbsp;<?= number_format($row['product_price'],2) ?>€</h5>
+
+            </div>
+            <div class="card-footer p-1">
+              <form action="" class="form-submit" id="indexForm">
+                <div class="row p-2">
+                  <div class="col-md-6 py-1 pl-4">
+                    <b>Quantity : </b>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="number" class="form-control pqty" value="<?= $row['product_qty'] ?>">
+                  </div>
+                </div>
+                <input type="hidden" class="pid" value="<?= $row['id'] ?>">
+                <input type="hidden" class="pname" value="<?= $row['product_name'] ?>">
+                <input type="hidden" class="pprice" value="<?= $row['product_price'] ?>">
+                <input type="hidden" class="pimage" value="<?= $row['product_image'] ?>">
+                <input type="hidden" class="pcode" value="<?= $row['product_code'] ?>">
+                <button class="btn btn-info btn-block addItemBtn"><i class="fas fa-cart-plus"></i>&nbsp;&nbsp;Add to
+                  cart</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php endwhile; ?>
+    </div>
+  </div>
+  <!-- Displaying Products End -->
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js'></script>
+
+  <script src="./js/index.js"></script>
+</body>
+
+</html>

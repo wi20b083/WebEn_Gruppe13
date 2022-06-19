@@ -23,8 +23,7 @@ form.addEventListener('submit', function (e) {
             var json = $.parseJSON(response);
 
             if (json.valid) {
-                sessionStorage.setItem('uname', unameEl.value.trim);
-                window.location.href = "http://localhost/WebEnProjekt/frontend/sites/home.php";
+                window.location.href = "http://localhost/WebEnProjekt/frontend/index.php";
             } else {
                 console.log("Error"); 
             }

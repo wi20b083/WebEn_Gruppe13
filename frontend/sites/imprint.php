@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +25,7 @@
 <body>
 
 
-
+<?php include "../nav/navbar.php";  ?>
 <div id= "ImprintDiv1" class ="container border border-dark rounded text-center mt-5 pt-5 mb-5 " >
 
     <div id = "headerDivImprint"class= "container mb-5">

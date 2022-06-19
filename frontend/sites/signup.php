@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +17,7 @@
 </head>
 
 <body>
+<?php include "../nav/navbar.php";  ?>
     <div class="container mb-3">
         <main>
             <form id="signup">

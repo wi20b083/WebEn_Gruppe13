@@ -26,7 +26,7 @@ const checkFName = () => {
     if (!isRequired(fname)) {
         showError(fnameErr, 'Firstname cannot be blank.');
     } else if (!isLetters(fname)) {
-        showError(fnameErr, 'Firstname must only contain letters')
+        showError(fnameErr, 'Firstname must only contain letters.')
     } else {
         showSuccess(fnameErr);
         valid = true;
@@ -40,7 +40,7 @@ const checkLName = () => {
     if (!isRequired(lname)) {
         showError(lnameErr, 'Lastname cannot be blank.');
     } else if (!isLetters(lname)) {
-        showError(lnameErr, 'Lastname must only contain letters')
+        showError(lnameErr, 'Lastname must only contain letters.')
     } else {
         showSuccess(lnameErr);
         valid = true;

@@ -1,5 +1,12 @@
 <?php
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
 include "../config/dbconnect.php"; 
+
+
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -23,6 +30,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $dataValid["valid"] = false;
         }
         $stmt->close(); 
+    }
+
+    if($dataValid["valid"]) {
+        $_SESSION["uname"] = $uname;
     }
     echo json_encode($dataValid);  
 }
