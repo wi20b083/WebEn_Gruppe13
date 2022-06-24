@@ -11,13 +11,10 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Registration Form</title>
     <link rel="stylesheet" href="../res/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 
 <body>
-<?php include "../nav/navbar.php";  ?>
+    <?php include "../nav/navbar.php";  ?>
     <div class="container mb-3">
         <main>
             <form id="signup">
@@ -72,7 +69,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="row">
                         <small class="text-danger mb-1" id="emailErr"></small class="text-danger mb-1">
                     </div>
-                    <input required class="form-control" type="email" id="email" name="email" placeholder="john.doe@example.com">
+                    <input required class="form-control" type="email" id="email" name="email"
+                        placeholder="john.doe@example.com">
                 </div>
 
                 <div class="mb-3">
@@ -136,8 +134,8 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9/sha256.js"></script>
     <script src="../js/signUpValidation.js"></script>

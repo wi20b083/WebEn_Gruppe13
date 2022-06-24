@@ -25,7 +25,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
         if(!empty($row)) {
-            $dataValid["valid"] = true; 
+            $dataValid["valid"] = true;
         } else {
             $dataValid["valid"] = false;
         }

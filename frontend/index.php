@@ -1,75 +1,63 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="author" content="Akib Khan">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Shopping Cart System</title>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css' />
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
+    <meta charset="UTF-8">
+    <meta name="author" content="Akib Khan">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Products</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 </head>
 
 <body>
-  <?php include "./nav/navbar.php";  ?>
+    <?php include "./nav/navbar.php";  ?>
+    <div class="container-fluid m-2">
 
-  <!-- Displaying Products Start -->
-  <div class="container">
-    <div id="message"></div>
-    <div class="row mt-2 pb-3">
-      <?php
-  			include '../backend/config/dbconnect.php';
-  			$stmt = $db_obj->prepare('SELECT * FROM product');
-  			$stmt->execute();
-  			$result = $stmt->get_result();
-  			while ($row = $result->fetch_assoc()):
-  		?>
-      <div class="col-sm-6 col-md-4 col-lg-3 mb-2">
-        <div class="card-deck">
-          <div class="card p-2 border-secondary mb-2">
-            <img src="../backend/<?= $row['product_image'] ?>" class="card-img-top" height="250">
-            <div class="card-body p-1">
-              <h4 class="card-title text-center text-info"><?= $row['product_name'] ?></h4>
-              <h5 class="card-text text-center text-danger">&nbsp;&nbsp;<?= number_format($row['product_price'],2) ?>€</h5>
+        <h1 class="text-center">Products</h1>
 
-            </div>
-            <div class="card-footer p-1">
-              <form action="" class="form-submit" id="indexForm">
-                <div class="row p-2">
-                  <div class="col-md-6 py-1 pl-4">
-                    <b>Quantity : </b>
-                  </div>
-                  <div class="col-md-6">
-                    <input type="number" class="form-control pqty" value="<?= $row['product_qty'] ?>">
-                  </div>
+        <!--suche mit produkte hidden setzen die nicht den suchterm enthalten-->
+
+        <!--Filter-->
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-info" id="btnAll">All</button>
+                    <button type="button" class="btn btn-outline-info" id="btnShirt">Shirts</button>
+                    <button type="button" class="btn btn-outline-info" id="btnSweater">Sweaters</button>
+                    <button type="button" class="btn btn-outline-info" id="btnPants">Pants</button>
                 </div>
-                <input type="hidden" class="pid" value="<?= $row['id'] ?>">
-                <input type="hidden" class="pname" value="<?= $row['product_name'] ?>">
-                <input type="hidden" class="pprice" value="<?= $row['product_price'] ?>">
-                <input type="hidden" class="pimage" value="<?= $row['product_image'] ?>">
-                <input type="hidden" class="pcode" value="<?= $row['product_code'] ?>">
-                <button class="btn btn-info btn-block addItemBtn"><i class="fas fa-cart-plus"></i>&nbsp;&nbsp;Add to
-                  cart</button>
-              </form>
             </div>
-          </div>
+            <div class="col">
+                <div class="input-group d-grid d-flex justify-content-end flex-nowrap">
+                    <div id="search-autocomplete" class="form-outline">
+                        <input type="search" id="txtSearch" class="form-control txtSearch" list="datalistOptions"
+                            placeholder="Search" />
+                        <datalist id="datalistOptions"></datalist>
+                    </div>
+                    <button type="button" class="btn btn-outline-info btnSearch" id="btnSearch">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
         </div>
-      </div>
-      <?php endwhile; ?>
     </div>
-  </div>
-  <!-- Displaying Products End -->
+    <!-- Displaying Products -->
+    <div class="container-fluid m-2 align-items-center">
+        <div id="message"></div>
+        <div class="row row-cols-xs-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-5" id="row0"></div>
+    </div>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script> -->
 
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js'></script>
-
-  <script src="./js/index.js"></script>
+    <script src="./js/index.js" defer></script>
 </body>
 
 </html>
