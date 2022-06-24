@@ -6,7 +6,7 @@ $(document).ready(function() {
       $.ajax({
         url: 'action.php',
         method: 'post',
-        data: $('form').serialize() + "&action=order",
+        data: $('form').serialize() + "&method=order", 
         success: function(response) {
           $("#order").html(response);
         }

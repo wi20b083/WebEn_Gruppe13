@@ -61,18 +61,19 @@ $(document).ready(function () {
               qty.classList.add("itemQty");
               qty.setAttribute("type", "number");
               qty.setAttribute("value", element.qty);
-              qty_td.appendChild(qty).onchange = function(e) {
-                e.preventDefault(); 
-                onChange($(this)); 
+              qty_td.appendChild(qty).onchange = function (e) {
+                e.preventDefault();
+                onChange($(this));
               };
 
               tr.appendChild(qty_td);
 
               var total = document.createElement("td");
-              total.innerText = new Intl.NumberFormat("de-DE", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }).format(element.total_price) + "€";
+              total.innerText =
+                new Intl.NumberFormat("de-DE", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }).format(element.total_price) + "€";
               tr.appendChild(total);
 
               var remove_td = document.createElement("td");
@@ -94,9 +95,9 @@ $(document).ready(function () {
                 "<i class='fa-solid fa-trash me-2'></i>Remove item";
 
               remove_td.appendChild(remove).onclick = function (e) {
-                e.preventDefault(); 
-                onClick(element.id); 
-              }
+                e.preventDefault();
+                onClick(element.id);
+              };
 
               tr.appendChild(remove_td);
 
@@ -123,7 +124,8 @@ $(document).ready(function () {
       a1.classList.add("w-100");
       a1.setAttribute("href", "../index.php");
 
-      a1.innerHTML = "<i class='fa-solid fa-shopping-cart me-2'></i>Continue Shopping";
+      a1.innerHTML =
+        "<i class='fa-solid fa-shopping-cart me-2'></i>Continue Shopping";
 
       td1.appendChild(a1);
 
@@ -166,7 +168,17 @@ $(document).ready(function () {
 
       a2.innerHTML = "<i class='fa-solid fa-credit-card me-2'></i>Checkout";
 
-      td4.appendChild(a2);
+      td4.appendChild(a2).onclick = function (e) {
+        e.preventDefault;
+        $.ajax({
+          url: "../../backend/logic/order.php",
+          method: "get",
+          success: function (response) {
+            console.log(response); 
+            $("#order").html(response);
+          },
+        });
+      };
 
       tr1.appendChild(td4);
 
@@ -187,7 +199,7 @@ $(document).ready(function () {
           remove: "all",
         },
         success: function () {
-          location.reload(); 
+          location.reload();
         },
       });
     }
@@ -219,31 +231,31 @@ function onClick(id) {
         remove: id,
       },
       success: function () {
-        location.reload();  
-      }
+        location.reload();
+      },
     });
   }
 }
 
 function onChange(btn) {
-  var $el = btn.closest('tr');
+  var $el = btn.closest("tr");
 
-    var pid = $el.find(".pid").val();
-    var pprice = $el.find(".pprice").val();
-    var qty = $el.find(".itemQty").val();
-    $.ajax({
-      url: '../../backend/logic/action.php',
-      method: 'post',
-      cache: false,
-      async: false, 
-      data: {
-        method: "update",
-        qty: qty,
-        pid: pid,
-        pprice: pprice
-      },
-      success: function() { 
-        location.reload();
-      }
-    });
+  var pid = $el.find(".pid").val();
+  var pprice = $el.find(".pprice").val();
+  var qty = $el.find(".itemQty").val();
+  $.ajax({
+    url: "../../backend/logic/action.php",
+    method: "post",
+    cache: false,
+    async: false,
+    data: {
+      method: "update",
+      qty: qty,
+      pid: pid,
+      pprice: pprice,
+    },
+    success: function () {
+      location.reload();
+    },
+  });
 }

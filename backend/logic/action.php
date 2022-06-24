@@ -116,7 +116,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
     echo json_encode($response); 
 } else if($_SERVER["REQUEST_METHOD"] == "GET") {   
-    if(isset($_SESSION["uname"]) && !isset($_GET["remove"])) {
+    
+
+    if(isset($_SESSION["uname"]) && !isset($_GET["remove"]) && !isset($_GET["method"])) {
         $sql = 'SELECT * FROM users WHERE uname=?'; 
         $stmt = $db_obj->prepare($sql); 
         $stmt->bind_param('s', $_SESSION["uname"]); 
@@ -125,7 +127,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = $result->fetch_assoc();  
         $userID = $row["ID"];   
         $stmt->close(); 
-
 
         $sql = 'SELECT * FROM cart WHERE userID=?'; 
         $stmt = $db_obj->prepare($sql);
@@ -152,9 +153,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $stmt->close(); 
         $response = array("uname" => $_SESSION["uname"], "userID" => $userID, "count" => $count, "data" => $product_arr); 
-        echo json_encode($response);  
-    } else {
-        if(isset($_SESSION["uname"]) && isset($_GET["remove"])) {
+        echo json_encode($response); 
+
+    } else if(isset($_SESSION["uname"]) && isset($_GET["remove"]) && !isset($_GET["method"])) {
             $sql = 'SELECT * FROM users WHERE uname=?'; 
             $stmt = $db_obj->prepare($sql); 
             $stmt->bind_param('s', $_SESSION["uname"]); 
@@ -177,5 +178,4 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             } 
         }
     }
-}
 ?>
