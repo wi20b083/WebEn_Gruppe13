@@ -27,10 +27,11 @@ try{
             $datas[] = $row;   
         }
 
-        echo json_encode($datas);
-    
         $db_obj->close();
         $stmt->close();
+        echo json_encode($datas);
+    
+        
         
             
 

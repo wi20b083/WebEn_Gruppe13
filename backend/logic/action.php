@@ -48,9 +48,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         //if it hasn't been added to the cart yet
                         if (!$code) {
-                            $sql = 'INSERT INTO cart (product_name,product_price,product_image,qty,total_price,product_code,userID) VALUES (?,?,?,?,?,?,?)'; 
+                            $sql = 'INSERT INTO cart (pid, product_name,product_price,product_image,qty,total_price,product_code,userID) VALUES (?,?,?,?,?,?,?,?)'; 
                             $query = $db_obj->prepare($sql);
-                            $query->bind_param('ssssssi',$pname,$pprice,$pimage,$pqty,$total_price,$pcode,$userID);
+                            $query->bind_param('issssssi',$pid, $pname,$pprice,$pimage,$pqty,$total_price,$pcode,$userID);
                             $query->execute();
                             $query->close(); 
 
@@ -132,7 +132,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $db_obj->prepare($sql);
         $stmt->bind_param('i', $userID);
         $stmt->execute();
-        $stmt->bind_result($id, $product_name, $product_price, $product_image, $qty, $total_price, $product_code, $userID);
+        $stmt->bind_result($id, $pid, $product_name, $product_price, $product_image, $qty, $total_price, $product_code, $userID);
         $count = 0; 
         $product_arr = array(); 
         while($stmt->fetch()) {
@@ -140,6 +140,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $product_arr,
                 array(
                    "id" => $id,
+                   "pid" => $pid,
                    "product_name" => $product_name, 
                    "product_price" => $product_price, 
                    "product_image" => $product_image, 

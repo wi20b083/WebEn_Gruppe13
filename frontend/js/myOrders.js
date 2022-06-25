@@ -1,296 +1,372 @@
 var divAllOrders = document.getElementById("myOrders");
-var id = null; 
+var id = null;
 
+$(document).ready(function () {
+  var props = "";
+  $.ajax({
+    type: "GET",
+    url: "../../backend/logic/account.php",
+    data: {},
+    async: false,
 
+    success: function (response) {
+      var json = $.parseJSON(response);
+      json.forEach((element) => {
+        id = element.ID;
+      });
 
-
-$(document).ready(function() {
-
-    $.ajax({
+      $.ajax({
         type: "GET",
-        url: "../../backend/logic/account.php",
+        url: "../../backend/logic/getUserOrders.php",
         data: {
-            
-            
-            
+          id: id,
         },
         async: false,
-        
+
         success: function (response) {
-
-
-            console.log(response); 
-    
+          if (response.length > 2) {
             var json = $.parseJSON(response);
-            json.forEach(element => {
-                id = element.ID; 
+            if (json.length != 2) {
+              for (var key in json) {
+                if (key == "data") {
+                  var data = json[key];
+                  for (var x in data) {
+                    var element = data[x];
 
-                console.log(element.ID);
-            });
+                    var total = 0;
 
+                    var timestamp = element.time;
 
-            console.log(":" + id);
+                    var a = document.createElement("a");
+                    a.setAttribute(
+                      "class",
+                      "list-group-item list-group-item-action"
+                    );
 
+                    var div = document.createElement("div");
+                    div.setAttribute(
+                      "class",
+                      "d-flex w-100 justify-content-between"
+                    );
 
+                    a.appendChild(div);
 
-            $.ajax({
-                type: "POST",
-                url: "../../backend/logic/getMyOrders.php",
-                data: {
-                    
-                    id: id
-                    
-                },
-                async: false,
-                
-                success: function (response) {
-                    //response = list of order where uid = ?
-        
-                    console.log(response); 
-            
-                    var json = $.parseJSON(response);
-                    json.forEach(element => {
+                    var orderHead = document.createElement("h5");
+                    orderHead.classList.add("mb-1");
+                    orderHead.innerText = "Order #" + element.oid;
+                    div.appendChild(orderHead);
+                    div.appendChild(document.createElement("hr"));
 
+                    var time = document.createElement("small");
+                    time.classList.add("text-muted");
+                    time.innerText = timestamp;
 
-                        var divOrder = document.createElement("div");
-                        divOrder.setAttribute("id", "order");
-                        divOrder.setAttribute("class", " border border-secondary m-3");
-                        divAllOrders.appendChild(divOrder);
-                        
+                    div.appendChild(time);
 
-                        var orderId = document.createElement("p");
-                        divOrder.appendChild(orderId);
-                        orderId.innerHTML= element.id; 
+                    var p = document.createElement("p");
+                    p.classList.add("mb-1");
+                    a.appendChild(p);
 
-                        var orderName = document.createElement("p");
-                        divOrder.appendChild(orderName);
-                        orderId.innerHTML= element.name; 
+                    var sm = document.createElement("small");
+                    sm.classList.add("text-muted");
+                    a.appendChild(sm);
 
-                        var orderEmail = document.createElement("p");
-                        divOrder.appendChild(orderEmail);
-                        orderEmail.innerHTML= element.email; 
+                    var pdfCol = document.createElement("div");
+                    pdfCol.classList.add("col-3");
 
-                        var orderPhone = document.createElement("p");
-                        divOrder.appendChild(orderPhone);
-                        orderPhone.innerHTML= element.phone; 
+                    var btnPdf = document.createElement("button");
+                    btnPdf.setAttribute("class", "btn btn-primary");
+                    btnPdf.setAttribute("oid", element.oid);
+                    btnPdf.innerText = "Show PDF";
 
-                        var orderAddress = document.createElement("p");
-                        divOrder.appendChild(orderAddress);
-                        orderAddress.innerHTML= element.address; 
-                        
+                    $.ajax({
+                      type: "GET",
+                      url: "../../backend/logic/getOrderInformation.php",
+                      data: {
+                        oid: element.oid,
+                        uid: element.uid,
+                      },
+                      async: false,
 
+                      success: function (response) {
+                        var json = $.parseJSON(response);
 
+                        for (var key in json) {
+                          switch (key) {
+                            case "user": {
+                              var user = json[key][0];
+                              /* var header =
+                                document.getElementById("modalHeader");
+                              header.innerText =
+                                "Viewing all orders by: " +
+                                user.fname +
+                                " " +
+                                user.lname; */
 
-                        //dont know what this is 
-                        var orderPmode = document.createElement("p");
-                        divOrder.appendChild(orderPmode);
-                        orderPmode.innerHTML= element.pmode; 
+                              sm.innerHTML =
+                                user.fname +
+                                " " +
+                                user.lname +
+                                " | " +
+                                user.email +
+                                " | " +
+                                user.adress +
+                                ", " +
+                                user.zip +
+                                ", " +
+                                user.city;
 
-                        //----
+                              break;
+                            }
+                            case "po": {
+                              var po = json[key];
 
-                        var orderProducts = document.createElement("p");
-                        divOrder.appendChild(orderProducts);
-                        orderProducts.innerHTML= element.products; 
+                              for (var x in po) {
+                                var item = po[x];
 
-                        var orderAmount = document.createElement("p");
-                        divOrder.appendChild(orderAmount);
-                        orderAmount.innerHTML= element.amount_paid; 
+                                var row = document.createElement("div");
+                                row.classList.add("row");
+                                row.setAttribute("id", "row" + item.pid);
 
-                        var linkpdf = document.createElement("button");
-                        divOrder.appendChild(linkpdf);
-                        linkpdf.innerHTML="show pdf";
-                        linkpdf.setAttribute("onclick", "generatePdf()");
+                                var col1 = document.createElement("div");
+                                col1.classList.add("col");
+                                col1.classList.add("colName");
+                                col1.setAttribute("id", "colName" + item.pid);
 
+                                var col2 = document.createElement("div");
+                                col2.classList.add("col");
+                                col2.classList.add("colPrice");
+                                col2.setAttribute("id", "colPrice" + item.pid);
 
-                        console.log(element.name);
+                                var col3 = document.createElement("div");
+                                col3.classList.add("col");
+                                col3.classList.add("colQty");
+                                col3.setAttribute("id", "colQty" + item.pid);
+                                col3.innerText = item.qty;
+
+                                row.appendChild(col1);
+                                row.appendChild(col3);
+                                row.appendChild(col2);
+
+                                p.appendChild(row);
+                              }
+
+                              break;
+                            }
+                            case "product": {
+                              n = true;
+                              var products = json[key];
+
+                              for (var y in products) {
+                                var product = products[y];
+                                total +=
+                                  Number(product.pprice) *
+                                  Number(
+                                    a.querySelector(
+                                      "div#colQty" + product.pid + ".col.colQty"
+                                    ).innerText
+                                  );
+
+                                var nameCol = a.querySelector(
+                                  "div#colName" + product.pid + ".col.colName"
+                                );
+                                nameCol.innerText = product.pname;
+
+                                var priceCol = a.querySelector(
+                                  "div#colPrice" + product.pid + ".col.colPrice"
+                                );
+                                priceCol.innerText =
+                                  new Intl.NumberFormat("de-DE", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                  }).format(product.pprice) + "€";
+                              }
+                              break;
+                            }
+                          }
+                        }
+                      },
+                      error: function (response) {
+                        var x = JSON.parse(response);
+                        alert(x.status_code + " " + x.message);
+                      },
                     });
-        
-                    
-                },
-                error: function (response) {
-                    console.log("failed");
-                    var x = JSON.parse(response);
-                    alert(x.status_code + " " + x.message);
+
+                    var endPriceRow = document.createElement("div");
+                    endPriceRow.classList.add("row");
+
+                    var endPriceCol = document.createElement("div");
+                    endPriceCol.classList.add("col");
+                    endPriceCol.innerText =
+                      "Total: " +
+                      new Intl.NumberFormat("de-DE", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }).format(total) +
+                      "€";
+
+                    endPriceRow.appendChild(endPriceCol);
+                    p.appendChild(document.createElement("hr"));
+                    p.appendChild(endPriceRow);
+
+                    pdfCol.appendChild(btnPdf).onclick = function (e) {
+                      var btn = e.target;
+                      var oid = $(btn)
+                        .closest(".list-group-item")
+                        .children("div")
+                        .children("h5")
+                        .text()
+                        .replace(/^\D+/g, "");
+                      var invoiceDate = $(btn)
+                        .closest(".list-group-item")
+                        .children("div")
+                        .children("small")
+                        .text();
+                      var userDetails = $(btn)
+                        .closest(".list-group-item")
+                        .children("small")
+                        .text()
+                        .split(" | ");
+                      var userName = userDetails[0];
+                      var userEmail = userDetails[1];
+                      var userAddress = userDetails[2];
+
+                      var p = Array.from(
+                        $(btn)
+                          .closest(".list-group-item")
+                          .children("p")
+                          .children("div.row")
+                          .children(".col"),
+                        ({ textContent }) => textContent.trim()
+                      )
+                        .filter(Boolean)
+                        .join(";");
+
+                      prod = Array();
+                      res = p.split(";");
+                      var i = Number(0);
+                      var j = Number(1);
+                      var tot = Number(0);
+                      var arr = [null];
+                      for (x in res) { 
+                        arr.push(res[x]);
+
+                        if (i == 2) {
+                          arr[0] = String(j);
+                          j += Number(1);
+                          arr[4] = parseFloat(arr[2]) * parseFloat(arr[3].replace("€", ""));
+                          tot += arr[4];
+                          arr[4] = new Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }).format(arr[4]) + "€";
+                          prod.push(arr);
+                          arr = [null];
+                          i = Number(-1);
+                        }
+                        i++;
+                      }
+
+                      console.log(prod);
+
+                      tot =
+                        new Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }).format(tot);
+
+                      props = {
+                        outputType: jsPDFInvoiceTemplate.OutputType.Save,
+                        returnJsPDFDocObject: true,
+                        fileName: "Order #" + oid,
+                        orientationLandscape: false,
+                        compress: true,
+                        logo: {
+                          src: "../../backend/image/logo-clothing-gs.png",
+                          type: "PNG", //optional, when src= data:uri (nodejs case)
+                          width: 53.33, //aspect ratio = width/height
+                          height: 26.66,
+                          margin: {
+                            top: 0, //negative or positive num, from the current position
+                            left: 0, //negative or positive num, from the current position
+                          },
+                        },
+                        business: {
+                          name: "Clothing-Gs GmbH",
+                          address: "Hochstädterplatz 6, 1200 Wien, Österreich",
+                          phone: "+43 676 123123123",
+                          email: "clothing-gs@webshop.com",
+                          email_1: "info@clothing-gs.at",
+                        },
+                        contact: {
+                          label: "Invoice issued for:",
+                          name: userName,
+                          address: userAddress,
+                          email: userEmail,
+                        },
+                        invoice: {
+                          label: "Invoice #: ",
+                          num: oid,
+                          invGenDate: "Invoice issued on: " + invoiceDate,
+                          headerBorder: false,
+                          tableBodyBorder: false,
+                          header: [
+                            {
+                              title: "#",
+                              style: {
+                                width: 10,
+                              },
+                            },
+                            {
+                              title: "Title",
+                              style: {
+                                width: 30,
+                              },
+                            },
+                            { title: "Quantity" },
+                            { title: "Price" },
+                            { title: "Total" },
+                          ],
+                          table: prod,
+                          additionalRows: [
+                            {
+                              col1: "Total:",
+                              col2: tot,
+                              col3: "€",
+                              style: {
+                                fontSize: 14, //optional, default 12
+                              },
+                            },
+                          ],
+                        },
+                        footer: {
+                          text: "IBAN: AT69 0100 1010 0101 0011 | SWIFT/BIC: BTVAAT22DOR | Invoice due 2 weeks (10 business days) from the date of generation.",
+                        },
+                        pageEnable: true,
+                        pageLabel: "Page ",
+                      };
+                      generatePdf();
+                    };
+
+                    endPriceRow.appendChild(pdfCol);
+
+                    document.getElementById("orderList").appendChild(a);
+                  }
                 }
-            });
-
-            
+              }
+            }
+          }
         },
         error: function (response) {
-            console.log("failed");
-            var x = JSON.parse(response);
-            alert(x.status_code + " " + x.message);
-        }
-    });
-
-});
-
-var props = {
-    outputType: jsPDFInvoiceTemplate.OutputType.Save,
-    returnJsPDFDocObject: true,
-    fileName: "Invoice 2021",
-    orientationLandscape: false,
-    compress: true,
-    logo: {
-        src: "../../backend/image/logo-clothing-gs.png",
-        type: 'PNG', //optional, when src= data:uri (nodejs case)
-        width: 53.33, //aspect ratio = width/height
-        height: 26.66,
-        margin: {
-            top: 0, //negative or positive num, from the current position
-            left: 0 //negative or positive num, from the current position
-        }
-    },
-    stamp: {
-        inAllPages: true, //by default = false, just in the last page
-        src: "https://raw.githubusercontent.com/edisonneza/jspdf-invoice-template/demo/images/qr_code.jpg",
-        type: 'JPG', //optional, when src= data:uri (nodejs case)
-        width: 20, //aspect ratio = width/height
-        height: 20,
-        margin: {
-            top: 0, //negative or positive num, from the current position
-            left: 0 //negative or positive num, from the current position
-        }
-    },
-    business: {
-        name: "Clothing-Gs GmbH",
-        address: "Hochstädterplatz 6, 1200 Wien, Österreich",
-        phone: "+43 676 123123123",
-        email: "clothing-gs@webshop.com",
-        email_1: "info@clothing-gs.at",
-        website: "www.example.al",
-    },
-    contact: {
-        label: "Invoice issued for:",
-        name: "Client Name",
-        address: "Albania, Tirane, Astir",
-        phone: "(+355) 069 22 22 222",
-        email: "client@website.al",
-        otherInfo: "www.website.al",
-    },
-    invoice: {
-        label: "Invoice #: ",
-        num: 19,
-        invDate: "Payment Date: 01/01/2021 18:12",
-        invGenDate: "Invoice Date: 02/02/2021 10:17",
-        headerBorder: false,
-        tableBodyBorder: false,
-        header: [
-          {
-            title: "#", 
-            style: { 
-              width: 10 
-            } 
-          }, 
-          { 
-            title: "Title",
-            style: {
-              width: 30
-            } 
-          }, 
-          { 
-            title: "Description",
-            style: {
-              width: 80
-            } 
-          }, 
-          { title: "Price"},
-          { title: "Quantity"},
-          { title: "Unit"},
-          { title: "Total"}
-        ],
-        table: Array.from(Array(10), (item, index)=>([
-            index + 1,
-            "There are many variations ",
-            "Lorem Ipsum is simply dummy text dummy text ",
-            200.5,
-            4.5,
-            "m2",
-            400.5
-        ])),
-        additionalRows: [{
-            col1: 'Total:',
-            col2: '145,250.50',
-            col3: 'ALL',
-            style: {
-                fontSize: 14 //optional, default 12
-            }
+          var x = JSON.parse(response);
+          alert(x.status_code + " " + x.message);
         },
-        {
-            col1: 'VAT:',
-            col2: '20',
-            col3: '%',
-            style: {
-                fontSize: 10 //optional, default 12
-            }
-        },
-        {
-            col1: 'SubTotal:',
-            col2: '116,199.90',
-            col3: 'ALL',
-            style: {
-                fontSize: 10 //optional, default 12
-            }
-        }],
-        invDescLabel: "Invoice Note",
-        invDesc: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary.",
+      });
     },
-    footer: {
-        text: "The invoice is created on a computer and is valid without the signature and stamp.",
-    },
-    pageEnable: true,
-    pageLabel: "Page ",
-};
-
-
-
-
-function generatePdf( ){
+  });
+  function generatePdf() {
     var pdfCreated = jsPDFInvoiceTemplate.default(props);
-    var newCraft = pdfCreated;
-    var blob = pdfCreated;
-    console.log(typeof(newCraft)); //let you have 'blob' here
-    /*var blobUrl = URL.createObjectURL(blob);
-
-    var link = document.createElement("a"); // Or maybe get it from the current document
-    link.href = blobUrl;
-    link.download = "image.jpg";
-    link.innerHTML = "Click here to download the file";
-    document.body.appendChild(link);*/
-    var pdfObject = pdfCreated.JsPDFDocObject;
-
-    var formData = new FormData();
-   // formData.append("pdf", bl);
-
-    
-    $.ajax({
-        type: "POST",
-        url: "../../backend/logic/uploadPdf.php",
-        processData: false,
-        contentType: false,
-        data: {
-            
-           id: orderId.value,
-           
-            
-        },
-        async: false,
-        
-        success: function (response) {
-            //response = list of order where uid = ?
-
-            console.log(response); 
-    
-            
-
-            
-        },
-        error: function (response) {
-            console.log("failed");
-            var x = JSON.parse(response);
-            alert(x.status_code + " " + x.message);
-        }
-    });
-    
-
- };
+    var pdfObject = pdfCreated.jsPDFDocObject;
+    pdfObject.output("dataurlnewwindow"); 
+  }
+});

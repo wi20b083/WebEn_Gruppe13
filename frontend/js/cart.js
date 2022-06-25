@@ -161,23 +161,36 @@ $(document).ready(function () {
       a2.classList.add("btn-info");
       a2.classList.add("text-nowrap");
       a2.classList.add("w-100");
-      if (totalCost > 1) {
-        a2.setAttribute("disabled", "");
-      }
       a1.setAttribute("href", "../index.php");
 
       a2.innerHTML = "<i class='fa-solid fa-credit-card me-2'></i>Checkout";
 
       td4.appendChild(a2).onclick = function (e) {
         e.preventDefault;
-        $.ajax({
-          url: "../../backend/logic/order.php",
-          method: "get",
-          success: function (response) {
-            console.log(response); 
-            $("#order").html(response);
-          },
-        });
+        if (totalCost > 1) {
+          $.ajax({
+            url: "../../backend/logic/order.php",
+            method: "get",
+            success: function (response) {
+              console.log(response);
+              $("#order").html(response);
+            },
+          });
+
+          $.ajax({
+            url: "../../backend/logic/action.php?remove=all",
+            method: "get",
+            data: {
+              remove: "all",
+            },
+            success: function () {
+              alert(
+                "Your order has been placed. You can view your orders on your account page."
+              );
+              location.reload();
+            },
+          });
+        }
       };
 
       tr1.appendChild(td4);

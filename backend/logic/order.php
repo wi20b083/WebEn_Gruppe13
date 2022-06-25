@@ -31,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         $oid = $r["MAX(id)"];  
         $stmt->close();
 
-        echo "OID: ". $oid." ";  
+        
 
         $arr = array(); 
 
@@ -39,7 +39,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         $stmt = $db_obj->prepare($sql);
         $stmt->bind_param('i', $userID);
         $stmt->execute();
-        $stmt->bind_result($pid, $product_name, $product_price, $product_image, $qty, $total_price, $product_code, $userID);
+        $stmt->bind_result($id, $pid, $product_name, $product_price, $product_image, $qty, $total_price, $product_code, $userID);
         while($stmt->fetch()) {
              array_push(
                 $arr,

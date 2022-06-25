@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 include "../config/dbconnect.php"; 
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $insert_users = "INSERT INTO users(fname, lname, address, zip, city, email, uname, pwd) VALUES (?,?,?,?,?,?,?,?);";
+    $insert_users = "INSERT INTO users(fname, lname, address, zip, city, email, uname, pwd) VALUES (?,?,?,?,?,?,?,?);"; 
 
     $fname = $lname = $street = $streetnr = $address = $zip = $city = $email = $uname = $pwd = null; 
 
@@ -96,14 +96,45 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt = $db_obj->prepare($insert_users); 
                 $stmt -> bind_param("sssissss", $fname, $lname, $address, $zip, $city, $email, $uname, $pwd); 
                 $stmt -> execute();
-                $stmt -> close();
-                $db_obj -> close(); 
+                $stmt -> close(); 
                 echo json_encode(
                     array(
                         'message' => "Success.",
                         'status_code' => 200
                     )
                 );
+
+                $uidQuery = "SELECT ID from users WHERE uname=?"; 
+
+                $arr =""; 
+                $stmt = $db_obj->prepare($uidQuery); 
+                $stmt->bind_param("s", $uname); 
+                $stmt->execute(); 
+                $stmt->bind_result($uid);
+                while($stmt->fetch()) {
+                    $arr = array(
+                        'message' => $uid,
+                        'status_code' => 9
+                    ); 
+                    }
+                $stmt->close();   
+
+                $statusQuery = "INSERT INTO userstatus(uid) VALUES (?);";
+
+                $userright = "INSERT INTO userrights(uid, rid) VALUES (?,?);";
+
+
+                $stmt = $db_obj->prepare($statusQuery);
+                $stmt->bind_param("i", $uid);
+                $stmt->execute(); 
+                $stmt->close();
+
+                $i = 2; 
+                
+                $stmt = $db_obj->prepare($userright);
+                $stmt->bind_param("ii", $uid, $i);
+                $stmt->execute(); 
+                $stmt->close();
             }  
         } else {
             throw new Exception("Input data not valid", 400);   

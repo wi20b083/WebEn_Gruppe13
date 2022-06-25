@@ -26,11 +26,11 @@ try{
             while($row = $result->fetch_assoc()) {
                 $datas[] = $row;   
             }
-
+            $stmt->close();
         echo json_encode($datas);
         
-        $db_obj->close();
-        $stmt->close();
+        
+        
            
 
     }else{
