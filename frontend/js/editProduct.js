@@ -1,28 +1,28 @@
+//getting Elements
 var formId = document.getElementById("pid");
-    var formName = document.getElementById("pname");
-    var formPrice = document.getElementById("pprice");
-    var formQty = document.getElementById("pqty");
-    var formCode = document.getElementById("pcode");
-    var formCategory = document.getElementById("pcategory");
-    var formImg = document.getElementById("pimgEdit");
-    var imgSrc = document.getElementById("imgSrc");
-    var imgOfProd =document.getElementById("imgProd");
-    var formButton = document.getElementById("buttonSave");
-    var theform = document.getElementById("formEditProduct");
-    theform.hidden =true; 
-    formButton.setAttribute("onclick", "updateProduct()");
+var formName = document.getElementById("pname");
+var formPrice = document.getElementById("pprice");
+var formQty = document.getElementById("pqty");
+var formCode = document.getElementById("pcode");
+var formCategory = document.getElementById("pcategory");
+var formImg = document.getElementById("pimgEdit");
+var imgSrc = document.getElementById("imgSrc");
+var imgOfProd =document.getElementById("imgProd");
+var formButton = document.getElementById("buttonSave");
+var theform = document.getElementById("formEditProduct");
+
+//hide edit Form for the product which we is wanted to be edited 
+theform.hidden =true; 
+
+//setting function 
+formButton.setAttribute("onclick", "updateProduct()");
+//hide current image and display when admin press on edit Product 
+imgOfProd.hidden=true;
     
-    imgOfProd.hidden=true;
-    
-    
+
+//document ready function - when document is finished loading 
 $(document).ready(function() {
     
-
-    /*var formButton = document.getElementById("buttonSave");
-    formButton.setAttribute("onclick", "updateProduct()");
-    formButton.hidden =true; */
-    
-
     $.ajax({
         type: "GET",
         url: "../../backend/logic/index.php",
@@ -37,8 +37,9 @@ $(document).ready(function() {
             console.log(response); 
     
             
+
+            //creating a table where the elements willl be displayed 
                 var table = document.getElementById("productTable");
-            
             
                 var json = $.parseJSON(response);
                 json.forEach(element => {
@@ -58,10 +59,6 @@ $(document).ready(function() {
                 entryPrice.innerHTML = element.product_price; 
                 newTr.appendChild(entryPrice);
 
-                /* var entryQty = document.createElement("td");
-                entryQty.innerHTML = element.product_qty; 
-                newTr.appendChild(entryQty); */
-
                 var entryCode = document.createElement("td");
                 entryCode.innerHTML = element.product_code; 
                 newTr.appendChild(entryCode);
@@ -70,32 +67,28 @@ $(document).ready(function() {
                 entryCategory.innerHTML = element.product_category; 
                 newTr.appendChild(entryCategory);
 
+                var entryAction = document.createElement("td"); 
+
                 var editButton = document.createElement("button");
+                editButton.setAttribute("class", "btn btn-success m-1");
                 editButton.innerHTML = "Edit";
+                //adding onclick attribute to trigger edit function
                 editButton.setAttribute("onclick", "editProduct(" + element.id +" )");
-                editButton.setAttribute("class", "m-1");
-                newTr.appendChild(editButton);
+                
+                entryAction.appendChild(editButton);
 
                 var deleteButton = document.createElement("button");
+                deleteButton.setAttribute("class", "btn btn-danger m-1");
                 deleteButton.innerHTML = "Delete";
+                //adding onclick attribute to trigger the delete function 
                 deleteButton.setAttribute("onclick", "deleteProduct(" + element.id +" )");
-                deleteButton.setAttribute("class", "m-1");
-                newTr.appendChild(deleteButton);
-
-
-
-
+                
+                entryAction.appendChild(deleteButton);
+                newTr.appendChild(entryAction)
 
 
             });
 
-    
-                    
-            
-             
-    
-    
-    
         },
         error: function (response) {
             console.log("failed");
@@ -125,20 +118,10 @@ function editProduct(id){
             
             
             
-
+            //show form and Img of product 
             form.hidden=false;
-
-            //get Elements of the form 
-            //formId.setAttribute("type", "text");
-            //formId.setAttribute("readonly", "true");
-           // formName.setAttribute("type", "text");
-           // formPrice.setAttribute("type", "Number");
-           // formQty.setAttribute("type", "Number");
-            //formCode.setAttribute("type", "text");
-           // formCategory.setAttribute("style", "");
-            //formImg.hidden=false;
             imgOfProd.hidden=false;
-            //formButton.hidden = false;
+            
 
             var json = $.parseJSON(response);
                 //setting the value in the form for the selected 
@@ -146,17 +129,18 @@ function editProduct(id){
                 formId.value = element.id;
                 formName.value = element.product_name;
                 formPrice.value = element.product_price;
-                //formQty.value = element.product_qty;
+                
                 formCode.value = element.product_code;
+                //load img from directory
                 imgOfProd.setAttribute("src", "../../backend/" + element.product_image);
                 imgSrc.value = element.product_image;
-            
+                //option index for the option value 
                 var optionIndex; 
 
         
                 var category = element.product_category;
 
-
+                //setting option index 
                 if(category == "Shirt"){
                     optionIndex = 0; 
                 }else if(category == "Pullover"){
@@ -164,7 +148,7 @@ function editProduct(id){
                 }else if(category == "Hose"){
                     optionIndex = 2; 
                 }
-                
+                //setting value of the option element
                 formCategory.selectedIndex = optionIndex;
             
 
@@ -190,7 +174,7 @@ function editProduct(id){
 
 
 }
-
+//delete function 
 function deleteProduct(id){
     $.ajax({
         type: "POST",
@@ -205,9 +189,9 @@ function deleteProduct(id){
         success: function (response) {
             console.log(response);
             
-            
-            window.location = ("../../frontend/sites/editProducts.php");
+            //relocating after successfully deleting the item
             alert("Produkt wurde gelöscht. ")
+            location.reload(); 
 
     
         },
@@ -219,7 +203,7 @@ function deleteProduct(id){
     });
 }
 
-
+//function to update the prodcut 
 function updateProduct(){
 
      
@@ -233,7 +217,6 @@ function updateProduct(){
             id: formId.value.trim(),
             pname: formName.value.trim(),
             pprice: formPrice.value.trim(),
-            //pqty: formQty.value.trim(),
             pimg: formImg.value.trim(),
             pcode: formCode.value.trim(),
             pcategory: formCategory.value.trim(),

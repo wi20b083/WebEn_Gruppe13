@@ -12,13 +12,14 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9/sha256.js"></script>
+    <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
 </head>
 <body>
 <?php
 include "../nav/navbar.php"
 ?>    
 
-
+<!--  check Password -->
     <div class="container mb-3">
         <main>
             <div id="check Password">
@@ -32,7 +33,7 @@ include "../nav/navbar.php"
                     </div>
                     <input required type="password" class="form-control" id="password" name="password">
                 </div>
-                
+                <!-- Button confirm -->
                 <div class="mb-3">
                     <button id="confirmPassword" class="">Confirm</button>
                 </div>
@@ -43,8 +44,8 @@ include "../nav/navbar.php"
     </div>
 
 
- 
-
+    <?php include "../nav/footer.php";  ?>
+<!-- Js File -->
 <script src="../js/checkPassword.js"></script>
 
 </body>

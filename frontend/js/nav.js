@@ -1,12 +1,18 @@
 $(document).ready(function () {
+
+  //on document ready -> get userright info for the user currently logged in (or not logged in)
   $.ajax({
     url: "/WebEnProjekt/backend/logic/nav.php",
     method: "get",
     success: function (response) {
+
+      //if the response isn't empty 
       if (response.length > 2) {
         var json = $.parseJSON(response);
         for (var x in json) {
           var rid = json[x].rid;
+
+          //ADMIN NAV
           if (rid === 1) {
             //admin list item
             var admin = document.createElement("li");
@@ -79,6 +85,8 @@ $(document).ready(function () {
             document.getElementById("navList").appendChild(admin);
           }
 
+
+          //DEFAULT NAV
           if (rid === 2) {
             var account = document.createElement("li");
             account.classList.add("nav-item");
@@ -129,6 +137,8 @@ $(document).ready(function () {
             document.getElementById("navList").appendChild(logout);
           }
         }
+
+        //NOT LOGGED IN NAV
       } else {
         var login = document.createElement("li");
         login.classList.add("nav-item");
@@ -164,6 +174,8 @@ $(document).ready(function () {
       }
     },
   });
+
+  //displaying item count in shopping cart next to the nav item
   load_cart_item_number();
 });
 

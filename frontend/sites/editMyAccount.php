@@ -14,6 +14,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9/sha256.js"></script>
+    <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
     
 </head>
 <body>
@@ -21,6 +22,8 @@
 
 <div class = "container pt-3 mt-4 mb-2 text-center">
   <h2>Account Editor</h2>
+
+  <!-- Form to edit my Account  -->
 </div>
       <div  id ="editUserForm"class="container mb-3">
 
@@ -31,7 +34,7 @@
                     </div>
                     <input  class="form-control" type="hidden" id="uid" name="uid" >
                 </div>
-
+<!-- Username -->
                 <div class="mb-3">
                     <label for="uname" class="form-label">Username </label>
                     <div class="row">
@@ -39,7 +42,7 @@
                     </div>
                     <input  class="form-control" type="text" id="uname" name="uname" value="" readonly>
                 </div>
-
+<!-- Firstname -->
                 <div class="mb-3">
                     <label for="fname" class="form-label">Firstname </label>
                     <div class="row">
@@ -47,7 +50,7 @@
                     </div>
                     <input required class="form-control" type="text" id="fname" name="fname" value="">
                 </div>
-
+<!-- Lastname -->
                 <div class="mb-3">
                     <label for="lname" class="form-label">Lastname </label>
                     <div class="row">
@@ -56,7 +59,7 @@
                     <input required class="form-control" type="text" id="lname" name="lname" value="" >
                 </div>
 
-
+<!-- Email -->
                 <div class="mb-3">
                     <label for="email" class="form-label">E-Mail </label>
                     <div class="row">
@@ -64,7 +67,7 @@
                     </div>
                     <input required class="form-control" type="email" id="email" name="email" value="">
                 </div>
-
+<!-- Street + Number -->
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-8">
@@ -97,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-
+<!-- City -->
                 <div class="mb-3">
                     <label for="city" class="form-label">City</label>
                     <div class="row">
@@ -105,7 +108,7 @@
                     </div>
                     <input required class="form-control" id="city" name="city" type="text" value="">
                 </div>
-
+<!-- Zip Code -->
                 <div class="mb-3">
                     <label for="zip" class="form-label">Zip Code </label>
                     <div class="row">
@@ -113,11 +116,14 @@
                     </div>
                     <input required class="form-control" id="zip" name="zip" type="text" value="">
                 </div>
+
+                <!-- Button Save +  only saves the Data, no the password -->
                 <div class="mb-3">
                     <button id= "btnSave" name="btnSave" >Save</button>
                     
                 </div>
 
+                <!-- Own Form to edit Password -->
                 <div class="mb-3">
                     <label for="password" class="form-label"> New Password</label>
                     <div class="row">
@@ -136,7 +142,7 @@
                     </div>
                     <input  type="password" class="form-control" id="confpassword" name="confpassword" value="">
                 </div>
-
+                <!-- Change Password Button - only changes the Password + confirm current Password -->
                 <div class="mb-3">
                     <button id= "btnChangePassword"  >Change Password</button>
                     
@@ -153,7 +159,7 @@ include "../nav/footer.php"
 
 
 
-
+<!-- Js File -->
 <script src="../js/editAccount.js"></script>
 </body>
 </html>

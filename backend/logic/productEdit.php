@@ -2,6 +2,8 @@
 include "../config/dbconnect.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    //getting product id
     $pid  = $_POST['id'];
 
     
@@ -10,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 try{
     
 
-
+    //query
     $stmt = $db_obj->prepare('SELECT * FROM product WHERE ID = ?'); 
 
     if($stmt !== FALSE)
@@ -20,9 +22,12 @@ try{
         $result = $stmt->get_result();
         $datas = Array();
          
+        //saving data to an array
         while($row = $result->fetch_assoc()) {
             $datas[] =$row;    
         }
+
+        //returning data
         echo json_encode($datas);
            
         $db_obj->close();

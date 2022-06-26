@@ -13,7 +13,7 @@ if(isset($_SESSION["uname"])){
 try{
     
 
-
+//get user where uname = ?
     $stmt = $db_obj->prepare('SELECT * FROM users WHERE uname = ?'); 
 
     
@@ -22,16 +22,14 @@ try{
         $stmt -> bind_param('s',$uname); 
         $stmt -> execute(); 
         $result = $stmt->get_result();
-
+            //adding into data
             while($row = $result->fetch_assoc()) {
                 $datas[] = $row;   
             }
             $stmt->close();
+            //echoing the data to send the json 
         echo json_encode($datas);
         
-        
-        
-           
 
     }else{
         echo "no";

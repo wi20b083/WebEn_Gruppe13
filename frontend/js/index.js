@@ -14,6 +14,7 @@ $(document).ready(function () {
     var pcode = $form.find(".code").val();
     var pqty = $form.find(".quantity").val();
 
+    //sending item data
     $.ajax({
       url: '../backend/logic/action.php',
       method: 'post',
@@ -26,6 +27,8 @@ $(document).ready(function () {
         pimage: pimage,
         pcode: pcode
       },
+
+      //displaying a message
       success: function (response) {
         var json = $.parseJSON(response); 
         var alert = document.createElement("div"); 
@@ -57,6 +60,7 @@ $(document).ready(function () {
   //display number of items in the navbar
   load_cart_item_number();
 
+  //filtering items
   $("#btnAll").click(function (e) {
     $("#row0").empty(); 
     load_from_db("all");
@@ -85,6 +89,7 @@ $(document).ready(function () {
 
 });
 
+//loading number of items in cart
 function load_cart_item_number() {
   $.ajax({
     url: '../backend/logic/action.php',

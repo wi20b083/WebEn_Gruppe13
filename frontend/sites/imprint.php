@@ -11,10 +11,11 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Imprint</title>
+    <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
 </head>
 
 <body>
-
+<!-- Basic Imprint  -->
 
     <?php include "../nav/navbar.php";  ?>
     <div id="ImprintDiv1" class="container border border-dark rounded text-center mt-5 pt-5 mb-5 ">
@@ -31,8 +32,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <ul class="list-unstyled">
                 <li id="imprintName" class="fs-4 fw-bold pt-4">Webshop Clothing-Gs</li>
-                <li class="fw-bold pt-5">ADRESS: </li>
-                <li id="imprintAdress" class="pt-2  ">Hochstädterplatz 6 <br> 1200 Wien, Österreich</li>
+                <li class="fw-bold pt-5">ADDRESS: </li>
+                <li id="imprintAdress" class="pt-2  ">Höchstädtplatz 6 <br> 1200 Wien, Österreich</li>
                 <li class="fw-bold pt-5">CONTACT:</li>
                 <li id="imprintContactWebshop" class="pt-2">Webshop phone number: +43 676 123123123 </li>
                 <li id="imprintContactEmail" class="pt-2"> Webshop E-Mail: clothing-gs@webshop.com </li>
@@ -42,9 +43,6 @@ if (session_status() === PHP_SESSION_NONE) {
                 <li id="imprintChamberMembership" class="pt-2">Regional court Vienna </li>
                 <li class="fw-bold pt-5">Employees:</li>
                 <li class="pt-2">Florian Huber, Akib Kahn, Nils Petsch</li>
-                <img src="" alt="FotoFlo">
-                <img src="" alt="FotoAkib">
-                <img src="" alt="FotoNils">
 
 
 
@@ -63,12 +61,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
     </div>
 
-
-
 </body>
 
 <footer>
-    <?php include "../sites/footer.php" ?>
+    <?php include "../nav/footer.php" ?>
 </footer>
 
 </html>

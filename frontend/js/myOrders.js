@@ -1,3 +1,4 @@
+//div where the orders from the users will be added
 var divAllOrders = document.getElementById("myOrders");
 var id = null;
 
@@ -10,11 +11,13 @@ $(document).ready(function () {
     async: false,
 
     success: function (response) {
+      //getting the id of the User
       var json = $.parseJSON(response);
       json.forEach((element) => {
         id = element.ID;
       });
 
+      // getting all user orders
       $.ajax({
         type: "GET",
         url: "../../backend/logic/getUserOrders.php",
@@ -24,6 +27,8 @@ $(document).ready(function () {
         async: false,
 
         success: function (response) {
+
+          //creating the Orders of the Users in a modal 
           if (response.length > 2) {
             var json = $.parseJSON(response);
             if (json.length != 2) {
@@ -53,6 +58,7 @@ $(document).ready(function () {
 
                     var orderHead = document.createElement("h5");
                     orderHead.classList.add("mb-1");
+                    //order Head
                     orderHead.innerText = "Order #" + element.oid;
                     div.appendChild(orderHead);
                     div.appendChild(document.createElement("hr"));
@@ -73,7 +79,7 @@ $(document).ready(function () {
 
                     var pdfCol = document.createElement("div");
                     pdfCol.classList.add("col-3");
-
+                      //pdf button to genereate a invoice pdf of the order
                     var btnPdf = document.createElement("button");
                     btnPdf.setAttribute("class", "btn btn-primary");
                     btnPdf.setAttribute("oid", element.oid);
@@ -89,20 +95,17 @@ $(document).ready(function () {
                       async: false,
 
                       success: function (response) {
+
+                        //getting order information + reading out json file  + adding information to the list  
+                        
                         var json = $.parseJSON(response);
 
                         for (var key in json) {
                           switch (key) {
+                            //getting user information 
                             case "user": {
                               var user = json[key][0];
-                              /* var header =
-                                document.getElementById("modalHeader");
-                              header.innerText =
-                                "Viewing all orders by: " +
-                                user.fname +
-                                " " +
-                                user.lname; */
-
+                              
                               sm.innerHTML =
                                 user.fname +
                                 " " +
@@ -118,6 +121,7 @@ $(document).ready(function () {
 
                               break;
                             }
+                            //table product order --> gets us qty
                             case "po": {
                               var po = json[key];
 
@@ -153,6 +157,7 @@ $(document).ready(function () {
 
                               break;
                             }
+                            //product informations - gets us Productname, price 
                             case "product": {
                               n = true;
                               var products = json[key];
@@ -197,6 +202,7 @@ $(document).ready(function () {
 
                     var endPriceCol = document.createElement("div");
                     endPriceCol.classList.add("col");
+                    //display total after calculating the (price * qty) for each product and adding up 
                     endPriceCol.innerText =
                       "Total: " +
                       new Intl.NumberFormat("de-DE", {
@@ -209,7 +215,11 @@ $(document).ready(function () {
                     p.appendChild(document.createElement("hr"));
                     p.appendChild(endPriceRow);
 
+
+                    //onclick fro generate pdf
                     pdfCol.appendChild(btnPdf).onclick = function (e) {
+
+                      //getting all information needed from the <a> (and children) to generate the pdf
                       var btn = e.target;
                       var oid = $(btn)
                         .closest(".list-group-item")
@@ -231,6 +241,7 @@ $(document).ready(function () {
                       var userEmail = userDetails[1];
                       var userAddress = userDetails[2];
 
+                      //filling the final product array for the table in the pdf
                       var p = Array.from(
                         $(btn)
                           .closest(".list-group-item")
@@ -269,12 +280,14 @@ $(document).ready(function () {
 
                       console.log(prod);
 
+                      //total
                       tot =
                         new Intl.NumberFormat("de-DE", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         }).format(tot);
 
+                        //props template will be filled with the user coustumerinformation/productinformation + total + bank data
                       props = {
                         outputType: jsPDFInvoiceTemplate.OutputType.Save,
                         returnJsPDFDocObject: true,
@@ -291,6 +304,8 @@ $(document).ready(function () {
                             left: 0, //negative or positive num, from the current position
                           },
                         },
+
+                        //our info
                         business: {
                           name: "Clothing-Gs GmbH",
                           address: "Hochstädterplatz 6, 1200 Wien, Österreich",
@@ -298,12 +313,16 @@ $(document).ready(function () {
                           email: "clothing-gs@webshop.com",
                           email_1: "info@clothing-gs.at",
                         },
+
+                        //customer info
                         contact: {
                           label: "Invoice issued for:",
                           name: userName,
                           address: userAddress,
                           email: userEmail,
                         },
+
+                        //invoice number = order id
                         invoice: {
                           label: "Invoice #: ",
                           num: oid,
@@ -327,6 +346,8 @@ $(document).ready(function () {
                             { title: "Price" },
                             { title: "Total" },
                           ],
+
+                          //table with all ordered products
                           table: prod,
                           additionalRows: [
                             {
@@ -334,11 +355,13 @@ $(document).ready(function () {
                               col2: tot,
                               col3: "€",
                               style: {
-                                fontSize: 14, //optional, default 12
+                                fontSize: 14, 
                               },
                             },
                           ],
                         },
+
+                        //payment info
                         footer: {
                           text: "IBAN: AT69 0100 1010 0101 0011 | SWIFT/BIC: BTVAAT22DOR | Invoice due 2 weeks (10 business days) from the date of generation.",
                         },
@@ -364,6 +387,8 @@ $(document).ready(function () {
       });
     },
   });
+
+  //function which generates the pdf with the predefined props variable and opens it in a new tab
   function generatePdf() {
     var pdfCreated = jsPDFInvoiceTemplate.default(props);
     var pdfObject = pdfCreated.jsPDFDocObject;

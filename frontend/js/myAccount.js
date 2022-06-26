@@ -1,4 +1,7 @@
+//document ready function to get the Account data - with the help of the php $_SESSION var  
 $(document).ready(function () {
+
+  //getting the elements of the html 
   var uname = document.getElementById("uname");
   var fname = document.getElementById("fname");
   var lname = document.getElementById("lname");
@@ -10,7 +13,6 @@ $(document).ready(function () {
   var buttonSave = document.getElementById("btnedit");
 
   var greeting = document.getElementById("gretting");
-
   var linkedit = document.getElementById("linkedit");
 
   $.ajax({
@@ -21,7 +23,7 @@ $(document).ready(function () {
 
     success: function (response) {
       console.log(response);
-
+      //setting the value of the elements
       var json = $.parseJSON(response);
       json.forEach((element) => {
         uname.value = element.uname;
@@ -31,6 +33,7 @@ $(document).ready(function () {
         address.value = element.address;
         city.value = element.city;
         zip.value = element.zip;
+        //greeting 
         greeting.innerHTML = "Hello " + element.fname + "!";
       });
     },

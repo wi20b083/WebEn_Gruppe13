@@ -5,63 +5,85 @@ if (session_status() === PHP_SESSION_NONE) {
 include "../config/dbconnect.php"; 
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    //query for insert
     $insert_users = "INSERT INTO users(fname, lname, address, zip, city, email, uname, pwd) VALUES (?,?,?,?,?,?,?,?);"; 
 
+
+    //defining variables
     $fname = $lname = $street = $streetnr = $address = $zip = $city = $email = $uname = $pwd = null; 
 
+    //validation variables are false at first
     $dataValid = $fnameValid = $lnameValid = $unameValid = $streetValid = $streetnrValid = $cityValid = $zipValid = $emailValid = false; 
 
+    //lots of validation
+    //fname
     if(isset($_POST["fname"])) {
         $fnameValid = check_value("fname", $_POST["fname"]); 
         if($fnameValid) $fname = test_input($_POST["fname"]); 
     }
 
+    //lname
     if(isset($_POST["lname"])) {
         $lnameValid= check_value("lname", $_POST["lname"]);
 
         if($lnameValid) $lname = test_input($_POST["lname"]);
     }
 
+    //street
     if(isset($_POST["street"]) && isset($_POST["streetnr"])) {
         $streetValid = check_value("street", $_POST["street"]);
         $streetnrValid = check_value("streetnr", $_POST["streetnr"]);
         
+        //street number
         if($streetValid && $streetnrValid){
             $street = test_input($_POST["street"]);
             $streetnr = test_input($_POST["streetnr"]);
+
+            //combining it to address
             $address = $street." ".$streetnr; 
         }
     }
 
+    //zip
     if(isset($_POST["zip"])) {
         $zipValid = check_value("zip", $_POST["zip"]);
         if($zipValid) $zip = test_input($_POST["zip"]);
     }
 
+    //city
     if(isset($_POST["city"])) {
         $cityValid = check_value("city", $_POST["city"]);
 
         if($cityValid) $city = test_input($_POST["city"]);
     }
 
+    //email
     if(isset($_POST["email"])) {
         $emailValid = check_value("email", $_POST["email"]);
         if($emailValid) $email = test_input($_POST["email"]);
     }
 
+    //username
     if(isset($_POST["uname"])) {
         $unameValid = check_value("uname", $_POST["uname"]);
         if($unameValid) $uname = test_input($_POST["uname"]);
     }
 
+    //encrypt password
     if(isset($_POST["password"])) {
         $pwd = test_input($_POST["password"]);
         $pwd = hash("sha256", $pwd); 
     } 
 
+    //dataValid is the sum of all valid variables
     $dataValid = $fnameValid && $lnameValid && $unameValid && $streetValid && $streetnrValid && $cityValid && $zipValid && $emailValid;
     try {
+
+        //if all data is valid
         if($dataValid) {
+
+            //checking if username or email exists
             $unameQuery = "SELECT * FROM users WHERE uname = ?"; 
             $emailQuery = "SELECT * FROM users WHERE email = ?"; 
 
@@ -89,10 +111,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             $stmt->close();
 
+            //errors
             if($unameExists || $emailExists) {
                 if($unameExists) throw new Exception("Username already exisits.", 409); 
                 if($emailExists) throw new Exception("Email already exists", 409); 
-            } else {
+            } 
+            
+            //if neither exists
+            else {
+
+                //insert user into users
                 $stmt = $db_obj->prepare($insert_users); 
                 $stmt -> bind_param("sssissss", $fname, $lname, $address, $zip, $city, $email, $uname, $pwd); 
                 $stmt -> execute();
@@ -104,6 +132,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     )
                 );
 
+                //getting user id
                 $uidQuery = "SELECT ID from users WHERE uname=?"; 
 
                 $arr =""; 
@@ -119,6 +148,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                     }
                 $stmt->close();   
 
+
+                //setting userstatus to activated and userrights to 2 (default = not admin)
                 $statusQuery = "INSERT INTO userstatus(uid) VALUES (?);";
 
                 $userright = "INSERT INTO userrights(uid, rid) VALUES (?,?);";
@@ -156,6 +187,7 @@ function test_input($data) {
     return $data;
 }
 
+//checking values
 function check_value($field, $data) {
     switch($field) {
         case "fname": return isLetters($data);
@@ -177,18 +209,22 @@ function check_value($field, $data) {
     }
 }
 
+//checking if value is only letters
 function isLetters($value) {
     return preg_match("/^[a-zA-Z]{1}[a-zA-ZäöüßÄÖÜ]*$/", $value) === 1 ? true : false;
 }
 
+//checking if value is only numbers
 function isNumbers($value) {
     return preg_match("/[0-9]*$/", $value) === 1 ? true : false; 
 }
 
+//checking if value is between two values
 function isBetween($value) {
     return (strlen($value) > 3 && strlen($value) < 25) ? true : false; 
 }
 
+//checking if email is valid
 function emailValid($value) {
     return filter_var($value, FILTER_VALIDATE_EMAIL); 
 }

@@ -1,10 +1,12 @@
+
+//main element where the List will be created 
 var main = document.getElementById("main");
 
-$(document).ready(function () {
-  /*var formButton = document.getElementById("buttonSave");
-    formButton.setAttribute("onclick", "updateProduct()");
-    formButton.hidden =true; */
 
+//document ready function which trigger when the document ist finished loading 
+$(document).ready(function () {
+  
+//gets all users and creates the elements of the tableview where the users are displayed 
   $.ajax({
     type: "GET",
     url: "../../backend/logic/listUsers.php",
@@ -118,17 +120,12 @@ $(document).ready(function () {
 
         var buttonOrders = document.createElement("button");
         buttonOrders.innerHTML = "View Orders";
-        /* buttonOrders.setAttribute("onclick", "showOrders(" + element.ID + ")");
-        buttonOrders.setAttribute("type", "button");
-        buttonOrders.setAttribute("class", "btn btn-primary btnOrder");
-        buttonOrders.setAttribute("data-bs-toogle", "modal");
-        buttonOrders.setAttribute("data-bs-target", "#exampleModal");
-        buttonOrders.setAttribute("data-bs-whatever", element.ID); */
+        //button which triggers the modal to see the orders 
         tdViewOrders.innerHTML =
           '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="' +
           element.ID +
           '">View Orders</button>';
-        //tdViewOrders.appendChild(buttonOrders);
+        
 
         var tdChangeStatus = document.createElement("td");
         bodyTr.appendChild(tdChangeStatus);
@@ -137,11 +134,11 @@ $(document).ready(function () {
         buttonActivate.classList.add("btn"); 
 
          
-
+        //getting status of user --> activated, deactivated
         var status = getStatus(element.ID);
         
         console.log(status)
-
+        //sets button innner html and color where User can be set on activ oder deactivated 
         if(status) {
           console.log("activated")
           buttonActivate.classList.add("btn-danger")
@@ -152,7 +149,7 @@ $(document).ready(function () {
           buttonActivate.innerHTML = "Activate User";
         }
         
-
+        //onclick function for change status 
         tdChangeStatus.appendChild(buttonActivate).onclick = function (e) {
           changeStatus(element.ID, status); 
         };
@@ -164,9 +161,11 @@ $(document).ready(function () {
       alert(x.status_code + " " + x.message);
     },
   });
-
+//getting modal 
   var exampleModal = document.getElementById("exampleModal");
   exampleModal.addEventListener("show.bs.modal", function (event) {
+
+    //function which is triggerd when the admin click on the order list of the user 
     var button = event.relatedTarget;
     var id = button.getAttribute("data-bs-whatever");
     $.ajax({
@@ -178,6 +177,8 @@ $(document).ready(function () {
       async: false,
 
       success: function (response) {
+        //creating list of orders from a specific user
+
         if (response.length > 2) {
           var json = $.parseJSON(response);
           if (json.length != 2) {
@@ -225,7 +226,7 @@ $(document).ready(function () {
                   var sm = document.createElement("small");
                   sm.classList.add("text-muted");
                   a.appendChild(sm);
-
+                    //getting order inforamtion 
                   $.ajax({
                     type: "GET",
                     url: "../../backend/logic/getOrderInformation.php",
@@ -237,11 +238,13 @@ $(document).ready(function () {
 
                     success: function (response) {
                       console.log(response);
-
+                      //parsing and adding the order information to the elements
                       var json = $.parseJSON(response);
                       for (var key in json) {
                         switch (key) {
                           case "user": {
+
+                            //user information 
                             var user = json[key][0];
                             var header = document.getElementById("modalHeader");
                             header.innerText =
@@ -260,6 +263,7 @@ $(document).ready(function () {
                             break;
                           }
                           case "po": {
+                            //po = productorders --> gets the qty of the  products 
                             var po = json[key];
 
                             for (var x in po) {
@@ -296,6 +300,7 @@ $(document).ready(function () {
                             break;
                           }
                           case "product": {
+                            //gets the price and the product name
                             var products = json[key];
 
                             for (var y in products) {
@@ -374,6 +379,8 @@ $(document).ready(function () {
   });
 });
 
+
+//function which is triggerd to change the status of a user 
 function changeStatus(id, status) {
 
   console.log(id, status)
@@ -390,6 +397,7 @@ function changeStatus(id, status) {
   location.reload();
 }
 
+//function which gets the status of the user 
 function getStatus(id) {
   var status; 
   $.ajax({
@@ -399,7 +407,7 @@ function getStatus(id) {
     async: false,
     success: function(response) {
       var json = $.parseJSON(response);
-      //console.log(json)
+      
       status = Boolean(json); 
     }
   });

@@ -13,12 +13,15 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Login</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9/sha256.js"></script>
+    <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
 </head>
 
 <body>
 <?php include "../nav/navbar.php";  ?>
     <div class="container mb-3">
         <main>
+
+        <!-- Login Form -->
             <form id="login">
                 <h1>Login</h1>
                 <br>
@@ -38,11 +41,13 @@ if (session_status() === PHP_SESSION_NONE) {
                 </div>
 
                 <div class="mb-3">
-                    <p>Not a member? <a href="signup.php">Sign up</a></p>
+                    <p>Not a member? <a href="../sites/signup.php">Sign up</a></p>
                 </div>
             </form>
         </main>
     </div>
+    <?php include "../nav/footer.php";  ?>
+    <!-- JS Files -->
     <script src="../js/login.js"></script>
 </body>
 

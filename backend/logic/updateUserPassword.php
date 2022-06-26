@@ -4,8 +4,11 @@
 include "../config/dbconnect.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    //getting id 
     $uid  = $_POST['id'];
     
+    //encrypting password
     $pwd = test_input($_POST["password"]);
     $pwd = hash("sha256", $pwd); 
     
@@ -14,10 +17,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 try{
     
+    //query
     $stmt = $db_obj->prepare('UPDATE users SET pwd = ? WHERE id = ?'); 
         
 
-
+    //executing
     if($stmt !== FALSE){
         $stmt -> bind_param('si',$pwd, $uid);
         $stmt -> execute(); 
@@ -39,6 +43,7 @@ try{
         )
     );
 }
+
 function test_input($data) {
     $data = trim($data);
     $data = stripslashes($data);

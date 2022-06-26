@@ -1,3 +1,5 @@
+//getting all elements 
+
 const id = document.querySelector("#uid");
 const fnameEl = document.querySelector("#fname");
 const fnameErr = document.querySelector("#fnameErr");
@@ -23,9 +25,12 @@ const btnSave = document.querySelector("#btnSave");
 const div = document.querySelector("#editUserForm");
 const changePassword = document.querySelector("#btnChangePassword");
 
+//button onclick Attributes
 btnSave.setAttribute("onclick", "updateUser()");
 changePassword.setAttribute("onclick", "updatePassword()");
 
+
+//when document ist finished loading 
 $(document).ready(function () {
   $.ajax({
     type: "GET",
@@ -35,15 +40,18 @@ $(document).ready(function () {
 
     success: function (response) {
       console.log(response);
-
+      //parsing the Data which 
       var json = $.parseJSON(response);
       json.forEach((element) => {
+        //adding it to the elements to make available to see
         id.value = element.ID;
         unameEl.value = element.uname;
         fnameEl.value = element.fname;
         lnameEl.value = element.lname;
         emailEl.value = element.email;
 
+
+        
         var address = element.address; // store the address
         var addressParts = address.split(" "); // split the Address by space
         var streetNumber = addressParts[addressParts.length - 1]; // get streeNumber
@@ -63,7 +71,7 @@ $(document).ready(function () {
     },
   });
 });
-
+//validation FName
 const checkFName = () => {
   let valid = false;
   const fname = fnameEl.value.trim();
@@ -77,7 +85,7 @@ const checkFName = () => {
   }
   return valid;
 };
-
+//validation LName
 const checkLName = () => {
   let valid = false;
   const lname = lnameEl.value.trim();
@@ -91,7 +99,7 @@ const checkLName = () => {
   }
   return valid;
 };
-
+//validation UName
 const checkUName = () => {
   let valid = false;
   const min = 3,
@@ -110,7 +118,7 @@ const checkUName = () => {
   }
   return valid;
 };
-
+//validation Password
 const checkPassword = () => {
   let valid = false;
   const password = passwordEl.value.trim();
@@ -122,7 +130,7 @@ const checkPassword = () => {
   }
   return valid;
 };
-
+//validation password confirm 
 const checkConfPassword = () => {
   let valid = false;
   const confirmPassword = confpasswordEl.value.trim();
@@ -138,7 +146,7 @@ const checkConfPassword = () => {
   }
   return valid;
 };
-
+//validation Street
 const checkStreet = () => {
   let valid = false;
   const street = streetEl.value.trim();
@@ -152,7 +160,7 @@ const checkStreet = () => {
   }
   return valid;
 };
-
+//validation Streetnumer -- numeric 
 const checkStreetnr = () => {
   let valid = false;
   const streetnr = streetnrEl.value.trim();
@@ -166,7 +174,7 @@ const checkStreetnr = () => {
   }
   return valid;
 };
-
+//validation City
 const checkCity = () => {
   let valid = false;
   const city = cityEl.value.trim();
@@ -180,7 +188,7 @@ const checkCity = () => {
   }
   return valid;
 };
-
+//Validation Zip
 const checkZip = () => {
   let valid = false;
   const zip = zipEl.value.trim();
@@ -195,18 +203,19 @@ const checkZip = () => {
   return valid;
 };
 
+//validation Password -- requirments
 const isPasswordSecure = (password) => {
   const re = new RegExp(
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
   );
   return re.test(password);
 };
-
+//validation help function is letter
 const isLetters = (value) => {
   const re = new RegExp("^[a-zA-Z]{1}[a-zA-ZäöüßÄÖÜ]*$");
   return re.test(value);
 };
-
+//validation help function is numeric
 const isNumber = (value) => {
   const re = new RegExp("^[0-9]+$");
   return re.test(value);
@@ -215,18 +224,17 @@ const isNumber = (value) => {
 const isRequired = (value) => (value === "" ? false : true);
 const isBetween = (length, min, max) =>
   length < min || length > max ? false : true;
-
+//show error help function
 const showError = (error, message) => {
   error.textContent = message;
 };
-
+//show succes(nothing) help function
 const showSuccess = (error) => {
   error.textContent = "";
 };
-
+//onclick function Save 
 function updateUser() {
-  console.log("random");
-
+  //Validating
   let isFNameValid = checkFName(),
     isLNameValid = checkLName(),
     isUNameValid = checkUName(),
@@ -234,7 +242,7 @@ function updateUser() {
     isStreetNrValid = checkStreetnr(),
     isCityValid = checkCity(),
     isZipValid = checkZip();
-
+//if one is false - isFormValid = False,  
   let isFormValid =
     isFNameValid &&
     isLNameValid &&
@@ -243,7 +251,7 @@ function updateUser() {
     isStreetNrValid &&
     isCityValid &&
     isZipValid;
-
+//Post call to the backend 
   if (isFormValid) {
     $.ajax({
       type: "POST",
@@ -271,21 +279,26 @@ function updateUser() {
     });
   }
 }
-
+//function to update the password 
 function updatePassword() {
-  let isPwValid = checkPassword(),
-    isPwConfirmValid = checkConfPassword();
 
+  //Validation
+  let isPwValid = checkPassword(),
+  isPwConfirmValid = checkConfPassword();
+
+  //bool for if pw is valid 
   let isFormValid = isPwValid && isPwConfirmValid;
 
-  console.log(passwordEl.value);
-
   if (isFormValid) {
+
+    //encrypting Data
     var iv = CryptoJS.enc.Base64.parse("");
     var key = CryptoJS.SHA256(passwordEl.value.trim());
     var encryptedString = encryptData(passwordEl.value.trim(), iv, key);
     console.log(encryptedString);
 
+
+    //Post to backend with id and encyrpted string
     $.ajax({
       type: "POST",
       url: "../../backend/logic/updateUserPassword.php",
@@ -306,7 +319,7 @@ function updatePassword() {
     });
   }
 }
-
+//delay for errors 
 const debounce = (fn, delay = 500) => {
   let timeoutId;
   return (...args) => {
@@ -319,6 +332,8 @@ const debounce = (fn, delay = 500) => {
   };
 };
 
+
+//function  to trigger the on input validation 
 div.addEventListener(
   "input",
   debounce(function (e) {
@@ -353,7 +368,7 @@ div.addEventListener(
     }
   })
 );
-
+//resetting the form 
 div.addEventListener("reset", function () {
   showSuccess(fnameErr);
   showSuccess(lnameErr);
@@ -367,6 +382,8 @@ div.addEventListener("reset", function () {
   showSuccess(zipErr);
 });
 
+
+// encrypting pw function
 function encryptData(data, iv, key) {
   if (typeof data == "string") {
     data = data.slice();

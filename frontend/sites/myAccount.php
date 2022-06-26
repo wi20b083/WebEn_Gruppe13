@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>My Account</title>
     <link rel='stylesheet' href='../res/css/style.css' />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
     
 </head>
 <body>
@@ -25,7 +26,7 @@
     
 
 
-
+<!-- Form where User data will be filled in  -->
 <form class = "mb-5"id="formMyAccount"name="form" method="post" action="" enctype="multipart/form-data" >
 
     <div id ="formAccount" class="container border border-1 border-dark rounded mb-3 mt-3">
@@ -65,7 +66,7 @@
         Edit
       </button>
 
-      <!-- Modal -->
+      <!-- Modal to confirm Password when pression edit My Account-->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -83,12 +84,11 @@
                     <div class="row mb-1">
                         <small class="text-danger" id="checkPasswordError"></small>
                     </div>
+                    <!-- Password confirm to edit Account Data -->
                     <input required type="password" class="form-control" id="password" name="password">
                 </div>
             </div >
-        
-
-    </div>
+          </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -110,6 +110,7 @@ include "../nav/footer.php"
 ?>
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+ <!-- JS Files -->
 <script src="../js/myAccount.js"></script>
 <script src="../js/checkPassword.js"></script>
 </body>

@@ -1,4 +1,6 @@
 $(document).ready(function () {
+
+  //on document ready -> load items from cart and fill elements with data
   $.ajax({
     url: "../../backend/logic/action.php",
     method: "get",
@@ -12,8 +14,10 @@ $(document).ready(function () {
           if (key == "data") {
             var data = json[key];
 
+            //for each element -> create a table row
             for (var x in data) {
               var element = data[x];
+
               var tr = document.createElement("tr");
 
               var id_td = document.createElement("td");
@@ -111,6 +115,8 @@ $(document).ready(function () {
           }
         }
       }
+
+      //add the last row with grand total and checkout
       var tr1 = document.createElement("tr");
 
       var td1 = document.createElement("td");
@@ -165,6 +171,8 @@ $(document).ready(function () {
 
       a2.innerHTML = "<i class='fa-solid fa-credit-card me-2'></i>Checkout";
 
+
+      //checkout button -> onclick -> save order
       td4.appendChild(a2).onclick = function (e) {
         e.preventDefault;
         if (totalCost > 1) {
@@ -177,6 +185,7 @@ $(document).ready(function () {
             },
           });
 
+          //finally clear the cart
           $.ajax({
             url: "../../backend/logic/action.php?remove=all",
             method: "get",
@@ -200,8 +209,11 @@ $(document).ready(function () {
     },
   });
 
+  //display the cart item number next to the shopping cart in nav
   load_cart_item_number();
 
+
+  //onclick for the remove all button -> clear cart
   $("#btnRemoveAll").click(function (e) {
     e.preventDefault();
     if (confirm("Are you sure want to clear your cart?")) {
@@ -219,6 +231,8 @@ $(document).ready(function () {
   });
 });
 
+
+//getting the number of items in the cart
 function load_cart_item_number() {
   $.ajax({
     url: "../../backend/logic/action.php",
@@ -235,6 +249,8 @@ function load_cart_item_number() {
   });
 }
 
+
+//function for removing single item button
 function onClick(id) {
   if (confirm("Are you sure want to remove this item?")) {
     $.ajax({
@@ -250,6 +266,8 @@ function onClick(id) {
   }
 }
 
+
+//handling quantity changes
 function onChange(btn) {
   var $el = btn.closest("tr");
 

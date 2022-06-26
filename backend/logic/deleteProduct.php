@@ -1,34 +1,24 @@
 <?php
 
 include "../config/dbconnect.php";
-
+//if the methode = post get the product id 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     $pid  = $_POST['id'];
-
-    
 }
 
 try{
     
 
-
+    //deletes user where the id = ? 
     $stmt = $db_obj->prepare('DELETE FROM product WHERE ID = ?'); 
 
-    //DELETE FROM `product` WHERE `product`.`id` = 42
+    
 
     if($stmt !== FALSE)
-    {
+    {       //binding the param for the statement 
         $stmt -> bind_param('i',$pid); 
         $stmt -> execute(); 
-        $result = $stmt->get_result();
-        /*$datas = Array();
-         
-        while($row = $result->fetch_assoc()) {
-            $datas[] =$row;    
-        }
-        echo json_encode($datas);
-        */
-           
+        $result = $stmt->get_result();   
         $db_obj->close();
         $stmt->close();
     }else{

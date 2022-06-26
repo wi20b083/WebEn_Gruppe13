@@ -12,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 }
 
 try{
-    
+    //gets all order from the user which is currently logged in 
     $stmt = $db_obj->prepare('SELECT * FROM orders WHERE uid = ?'); 
         
     $datas = Array();
@@ -22,13 +22,14 @@ try{
         $stmt -> execute(); 
         
         $result = $stmt->get_result();
-
+        //parsing order data in datas variable 
         while($row = $result->fetch_assoc()) {
             $datas[] = $row;   
         }
 
         $db_obj->close();
         $stmt->close();
+        //echoing the output 
         echo json_encode($datas);
     
         

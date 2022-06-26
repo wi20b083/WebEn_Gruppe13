@@ -1,27 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- Admin Userlist Seite -->
 <head>
     <meta charset="UTF-8">
     <title>User Administration</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='../res/css/style.css' />
-    <!-- <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+    <link rel="icon" type="image/png" href="../../backend/image/logo-clothing-gs.png">
 
 </head>
 
 <body id="body">
+    <!-- Nav bar -->
     <?php
     include "../nav/navbar.php"
     ?>
     <div class="container-fluid p-4">
-
-
-
+        <!--   Modal which triggers when button view order is clicked -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
                 <div class="modal-content">
@@ -34,25 +30,20 @@
                         <div class="list-group" id="orderList">
                         </div>
                     </div>
-                    <!-- <div class="modal-footer" id="modalFooter">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send message</button>
-                    </div> -->
+                   
                 </div>
             </div>
         </div>
 
 
-
-        <div class="container" id="main">
+    <!-- Div where list will be generated  -->
+    <div class="container" id="main">
         </div>
-
     </div>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
-    </script> -->
+    <?php include "../nav/footer.php";  ?>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <!-- JS Files -->
     <script src="../js/userList.js"></script>
 </body>
 

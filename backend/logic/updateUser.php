@@ -4,6 +4,7 @@
 include "../config/dbconnect.php";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+    //Getting all user data
     $uid  = $_POST['id'];
     $uname =$_POST['uname'];
     $fname =$_POST['fname'];
@@ -22,10 +23,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 try{
     
+    //query
     $stmt = $db_obj->prepare('UPDATE users SET fname = ?, lname= ?, email = ?, address = ?, city = ?, zip = ? WHERE id = ?'); 
         
 
-
+    //execute
     if($stmt !== FALSE){
         $stmt -> bind_param('sssssii',$fname, $lname, $email, $address, $city, $zip, $uid);
         $stmt -> execute(); 

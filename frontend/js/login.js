@@ -1,15 +1,21 @@
+// getting relevant fields
 const form = document.querySelector("#login");
 const unameEl = document.querySelector("#uname");
 const passwordEl = document.querySelector("#password");
 const loginErr = document.querySelector("#loginErr");
 
+//on submit
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+
+  //encrypt password
   var iv = CryptoJS.enc.Base64.parse("");
   var key = CryptoJS.SHA256(passwordEl.value.trim());
   var encryptedString = encryptData(passwordEl.value.trim(), iv, key);
   console.log(encryptedString);
 
+
+  //send to backend
   $.ajax({
     type: "POST",
     url: "../../backend/logic/login.php",
@@ -37,6 +43,8 @@ form.addEventListener("submit", function (e) {
   });
 });
 
+
+//encrypting data with cryptoJS
 function encryptData(data, iv, key) {
   if (typeof data == "string") {
     data = data.slice();
